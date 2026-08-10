@@ -191,8 +191,26 @@
         // CORE STATE
         let appData = JSON.parse(localStorage.getItem('pandemWeddingData')) || [];
         let currentModalType = '';
-        let GAS_URL ='https://script.google.com/macros/s/AKfycbzPC-mo5BL7mXgvkgG7_9s-CbRHSJYDrGmS0BgRu58XzZyWHtnbE1Q0r2mh3w1RL3IP/exec';
+        let GAS_URL ='https://script.google.com/macros/s/AKfycbykXlcfBgtH5NaVj20Obw8eAGCKaPQZPNHWr_lZuMV7lmSxhyPQYc-KtKYWntkcMzUm/exec';
 
+         // NEW: AUTO-SYNC ON LOAD
+    window.onload = async function() {
+        if (GAS_URL) {
+            console.log("Auto-fetching latest cloud data...");
+            try {
+                const response = await fetch(GAS_URL);
+                const cloudData = await response.json();
+                if (cloudData.length > 0) {
+                    // Merge strategy: Cloud data wins for shared items
+                    appData = cloudData; 
+                    render();
+                    console.log("Cloud data synced successfully.");
+                }
+            } catch (e) {
+                console.error("Auto-fetch failed. Check URL or Network.");
+            }
+        }
+    };
         // NAVIGATION
         function navigate(viewId) {
             document.querySelectorAll('.view-content').forEach(v => v.classList.add('hidden'));
@@ -383,11 +401,23 @@
                     <input type="number" id="m-est" placeholder="Budgeted Amount (₹)" class="w-full p-4 rounded-2xl bg-gray-50 border-none">
                 `;
             }
+            if(type === 'food') {
+            title.innerText = "Catering & Detailed Menu";
+            body.innerHTML = `
+                <input type="text" id="m-name" placeholder="Event (e.g. Wedding Muhurtham)" class="w-full p-4 rounded-2xl bg-gray-50 border-none">
+                <input type="number" id="m-guests" placeholder="Guest Count" class="w-full p-4 rounded-2xl bg-gray-50 border-none">
+                <p class="text-[10px] font-bold text-gray-400 uppercase mt-2">Detail Menu / Groceries</p>
+                <textarea id="m-groceries" placeholder="Rice: 100kg, Chicken: 50kg, Alcohol: 20 Cases, Ice Cream: 500 units..." 
+                    class="w-full p-4 rounded-2xl bg-gray-50 border-none h-40"></textarea>
+                <input type="number" id="m-est" placeholder="Budget Allocation (₹)" class="w-full p-4 rounded-2xl bg-gray-50 border-none">
+            `;
+        }
+    }
         }
 
         function closeModal() { document.getElementById('modal-overlay').classList.add('hidden'); }
 
-        function handleSave() {
+        async function handleSave() {
             if(currentModalType === 'settings') {
                 GAS_URL = document.getElementById('m-gas').value;
                 localStorage.setItem('pandemGASUrl', GAS_URL);
@@ -423,6 +453,7 @@
             appData.push(newItem);
             closeModal();
             render();
+             await syncToCloud(true); // Silent sync after every save
         }
 
         // UTILITIES
@@ -458,6 +489,16 @@
                 btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-2 text-gold"></i> Cloud Sync';
             }
         }
+         async function syncToCloud(isAuto = false) {
+        if(!GAS_URL) return isAuto ? null : alert("Set URL in Settings.");
+        
+        try {
+            await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(appData) });
+            if(!isAuto) alert("Manual Cloud Sync Complete!");
+        } catch (e) {
+            if(!isAuto) alert("Sync Failed.");
+        }
+    }
 
         function handleSearch() {
             const term = document.getElementById('globalSearch').value.toLowerCase();
