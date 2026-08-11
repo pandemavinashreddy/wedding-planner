@@ -138,18 +138,45 @@
         let editId = null;
         let chartInstance = null;
 
-        window.onload = async () => {
-            try {
-                const res = await fetch(GAS_URL);
-                weddingData = await res.json();
-                render();
-            } catch (e) { console.error(e); }
-            document.getElementById('loading').classList.add('hidden');
-        };
-
-        async function sync() {
-            await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(weddingData) });
+     // Updated window.onload for Pandem's Wedding
+window.onload = async () => {
+    const loadingEl = document.getElementById('loading');
+    try {
+        console.log("Fetching from Cloud...");
+        const res = await fetch(GAS_URL);
+        const cloudData = await res.json();
+        
+        // If the cloud has data, use it. If not, check local storage.
+        if (Array.isArray(cloudData) && cloudData.length > 0) {
+            weddingData = cloudData;
+            console.log("Cloud data loaded.");
+        } else {
+            console.log("Cloud is empty, checking local storage...");
+            const local = localStorage.getItem('pandemWeddingData');
+            weddingData = local ? JSON.parse(local) : [];
         }
+        render();
+    } catch (e) { 
+        console.error("Sync failed", e); 
+        // Fallback to local storage if internet fails
+        const local = localStorage.getItem('pandemWeddingData');
+        weddingData = local ? JSON.parse(local) : [];
+        render();
+    } finally {
+        loadingEl.classList.add('hidden');
+    }
+};
+
+        // Also update the sync function to save to localStorage as a backup
+async function sync() {
+    localStorage.setItem('pandemWeddingData', JSON.stringify(weddingData)); // Backup
+    try {
+        await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(weddingData) });
+        console.log("Cloud Sync Done");
+    } catch (e) {
+        console.error("Cloud Sync Failed", e);
+    }
+}
 
         function navigate(id) {
             document.querySelectorAll('.view-content').forEach(v => v.classList.add('hidden'));
