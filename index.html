@@ -3,38 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pandem's Wedding Management | Pro Accounting</title>
+    <title>Pandem's Wedding Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --maroon: #630d16; --gold: #c5a059; --ivory: #fdfcf0; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--ivory); color: #1a1a1a; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--ivory); color: #1a1a1a; overflow-x: hidden; }
         .serif { font-family: 'Playfair Display', serif; }
         .glass-header { background: var(--maroon); border-bottom: 4px solid var(--gold); }
-        .nav-item { color: white; opacity: 0.7; font-weight: 600; padding: 10px 20px; border-radius: 8px; font-size: 13px; }
+        .nav-item { color: white; opacity: 0.7; font-weight: 600; padding: 10px 15px; border-radius: 8px; font-size: 13px; transition: 0.3s; }
         .nav-item.active { opacity: 1; background: var(--gold); color: var(--maroon); }
-        .card-luxury { background: white; border-radius: 1.5rem; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }
-        .btn-maroon { background: var(--maroon); color: white; padding: 10px 20px; border-radius: 10px; font-weight: 700; }
+        .card-luxury { background: white; border-radius: 1.25rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .btn-maroon { background: var(--maroon); color: white; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; }
         .loader { border-top-color: var(--maroon); animation: spinner 0.8s linear infinite; }
         @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="pb-24">
 
+    <!-- OVERLAY SPINNER -->
     <div id="loading" class="fixed inset-0 bg-white z-[200] flex flex-col items-center justify-center">
         <div class="loader w-12 h-12 border-4 border-gray-100 rounded-full mb-4"></div>
-        <p class="serif text-maroon font-bold tracking-widest uppercase">Pandem's Accounting Suite</p>
+        <p class="serif text-maroon font-bold tracking-widest uppercase">Fetching Cloud Data...</p>
     </div>
 
     <header class="glass-header sticky top-0 z-50 px-4 py-4">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
             <div class="flex items-center space-x-3 mb-4 md:mb-0 text-white">
                 <i class="fa-solid fa-om text-3xl text-gold"></i>
-                <h1 class="serif text-2xl uppercase">Pandem's Wedding</h1>
+                <h1 class="serif text-2xl uppercase tracking-tight">Pandem's Wedding</h1>
             </div>
-            <nav class="flex flex-wrap gap-2">
+            <nav class="flex flex-wrap justify-center gap-1 md:gap-4">
                 <button onclick="navigate('dash')" class="nav-item active" id="n-dash">Dashboard</button>
                 <button onclick="navigate('rituals')" class="nav-item" id="n-rituals">Rituals</button>
                 <button onclick="navigate('budget')" class="nav-item" id="n-budget">Accounting</button>
@@ -47,35 +48,34 @@
         
         <!-- DASHBOARD -->
         <section id="view-dash" class="view-content">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                <div class="card-luxury p-6 border-b-4 border-maroon">
-                    <p class="text-[10px] font-bold text-gray-400 uppercase">Total Estimate</p>
-                    <h2 class="serif text-2xl" id="stat-est">₹0</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-8">
+                <div class="card-luxury p-4 md:p-6 border-b-4 border-maroon">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase">Estimate</p>
+                    <h2 class="serif text-lg md:text-2xl" id="stat-est">₹0</h2>
                 </div>
-                <div class="card-luxury p-6 border-b-4 border-gray-800">
-                    <p class="text-[10px] font-bold text-gray-400 uppercase">Final Bill (Actual)</p>
-                    <h2 class="serif text-2xl" id="stat-act">₹0</h2>
+                <div class="card-luxury p-4 md:p-6 border-b-4 border-black">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase">Final Bill</p>
+                    <h2 class="serif text-lg md:text-2xl" id="stat-act">₹0</h2>
                 </div>
-                <div class="card-luxury p-6 border-b-4 border-green-600">
-                    <p class="text-[10px] font-bold text-gray-400 uppercase">Total Paid (Advance)</p>
-                    <h2 class="serif text-2xl text-green-700" id="stat-adv">₹0</h2>
+                <div class="card-luxury p-4 md:p-6 border-b-4 border-green-600">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase">Advance</p>
+                    <h2 class="serif text-lg md:text-2xl text-green-700" id="stat-adv">₹0</h2>
                 </div>
-                <div class="card-luxury p-6 border-b-4 border-red-600">
-                    <p class="text-[10px] font-bold text-gray-400 uppercase">Total Remaining</p>
-                    <h2 class="serif text-2xl text-red-700" id="stat-rem">₹0</h2>
+                <div class="card-luxury p-4 md:p-6 border-b-4 border-red-600">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase">Balance</p>
+                    <h2 class="serif text-lg md:text-2xl text-red-700" id="stat-rem">₹0</h2>
                 </div>
             </div>
 
-            <!-- RITUAL CHART -->
-            <div class="card-luxury p-8 bg-white mb-10">
-                <h3 class="serif text-xl mb-6 text-maroon">Ritual Cost Analysis (Est vs Actual)</h3>
+            <div class="card-luxury p-4 md:p-8 bg-white mb-10">
+                <h3 class="serif text-xl mb-6 text-maroon text-center md:text-left">Ritual Cost Analysis</h3>
                 <div class="relative h-64 md:h-96">
                     <canvas id="ritualChart"></canvas>
                 </div>
             </div>
         </section>
 
-        <!-- RITUALS -->
+        <!-- RITUALS SECTION -->
         <section id="view-rituals" class="view-content hidden">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="serif text-2xl text-maroon">Wedding Rituals</h2>
@@ -84,23 +84,23 @@
             <div id="ritual-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
         </section>
 
-        <!-- ACCOUNTING/RECONCILE -->
+        <!-- ACCOUNTING -->
         <section id="view-budget" class="view-content hidden">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="serif text-2xl text-maroon">Purchases & Advances</h2>
+                <h2 class="serif text-2xl text-maroon">Accounting</h2>
                 <button onclick="openModal('expense')" class="btn-maroon text-xs">+ Add Purchase</button>
             </div>
             <div class="card-luxury overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm">
-                        <thead class="bg-gray-50 text-[10px] uppercase font-bold text-gray-500">
+                        <thead class="bg-gray-50 text-[10px] uppercase font-bold text-gray-500 border-b">
                             <tr>
-                                <th class="p-4">Item (Linked Ritual)</th>
+                                <th class="p-4">Item</th>
                                 <th class="p-4">Estimated</th>
                                 <th class="p-4">Actual Bill</th>
-                                <th class="p-4">Advance Paid</th>
+                                <th class="p-4">Paid (Adv)</th>
                                 <th class="p-4">Remaining</th>
-                                <th class="p-4">Actions</th>
+                                <th class="p-4">Action</th>
                             </tr>
                         </thead>
                         <tbody id="accounting-table" class="divide-y"></tbody>
@@ -112,7 +112,7 @@
         <!-- LOGISTICS -->
         <section id="view-fleet" class="view-content hidden">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="serif text-2xl text-maroon">Travel & Fleet</h2>
+                <h2 class="serif text-2xl text-maroon">Fleet Logistics</h2>
                 <button onclick="openModal('fleet')" class="btn-maroon text-xs">+ Add Vehicle</button>
             </div>
             <div id="fleet-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
@@ -123,7 +123,7 @@
     <!-- MODAL -->
     <div id="modal" class="fixed inset-0 bg-black/80 hidden z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white w-full max-w-lg rounded-3xl p-8 shadow-2xl relative">
-            <h2 id="modal-title" class="serif text-2xl text-maroon mb-6">Form</h2>
+            <h2 id="modal-title" class="serif text-2xl text-maroon mb-6">Add Entry</h2>
             <div id="modal-form" class="space-y-4"></div>
             <div class="flex space-x-3 mt-8">
                 <button onclick="closeModal()" class="flex-1 py-3 font-bold text-gray-400">Cancel</button>
@@ -133,50 +133,40 @@
     </div>
 
     <script>
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbxCuCib5epjM5TJQIvZaXQwCyUJ52QRhm6EGiaOrIKBNcEEYGK4nthg3NMTWzBh1ms_/exec';
+        // PASTE YOUR SCRIPT URL HERE
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbyolvOvBqCLCrCmLMizjSUG65-ogXjxctvByacHKSs-9FTCPYsWMKQP4UfkuCKDWnjX/exec';
+        
         let weddingData = [];
         let editId = null;
         let chartInstance = null;
 
-     // Updated window.onload for Pandem's Wedding
-window.onload = async () => {
-    const loadingEl = document.getElementById('loading');
-    try {
-        console.log("Fetching from Cloud...");
-        const res = await fetch(GAS_URL);
-        const cloudData = await res.json();
-        
-        // If the cloud has data, use it. If not, check local storage.
-        if (Array.isArray(cloudData) && cloudData.length > 0) {
-            weddingData = cloudData;
-            console.log("Cloud data loaded.");
-        } else {
-            console.log("Cloud is empty, checking local storage...");
-            const local = localStorage.getItem('pandemWeddingData');
-            weddingData = local ? JSON.parse(local) : [];
-        }
-        render();
-    } catch (e) { 
-        console.error("Sync failed", e); 
-        // Fallback to local storage if internet fails
-        const local = localStorage.getItem('pandemWeddingData');
-        weddingData = local ? JSON.parse(local) : [];
-        render();
-    } finally {
-        loadingEl.classList.add('hidden');
-    }
-};
+        window.onload = async () => {
+            await fetchFromCloud();
+        };
 
-        // Also update the sync function to save to localStorage as a backup
-async function sync() {
-    localStorage.setItem('pandemWeddingData', JSON.stringify(weddingData)); // Backup
-    try {
-        await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(weddingData) });
-        console.log("Cloud Sync Done");
-    } catch (e) {
-        console.error("Cloud Sync Failed", e);
-    }
-}
+        async function fetchFromCloud() {
+            document.getElementById('loading').classList.remove('hidden');
+            try {
+                const res = await fetch(GAS_URL);
+                const data = await res.json();
+                weddingData = Array.isArray(data) ? data : [];
+                render();
+            } catch (e) { 
+                console.error("Cloud Fetch Error", e);
+                const local = localStorage.getItem('pandemWeddingData');
+                weddingData = local ? JSON.parse(local) : [];
+                render();
+            } finally {
+                document.getElementById('loading').classList.add('hidden');
+            }
+        }
+
+        async function sync() {
+            localStorage.setItem('pandemWeddingData', JSON.stringify(weddingData));
+            try {
+                await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(weddingData) });
+            } catch (e) { console.error("Sync Error", e); }
+        }
 
         function navigate(id) {
             document.querySelectorAll('.view-content').forEach(v => v.classList.add('hidden'));
@@ -199,10 +189,10 @@ async function sync() {
             const act = weddingData.reduce((s, i) => s + (Number(i.act) || 0), 0);
             const adv = weddingData.reduce((s, i) => s + (Number(i.adv) || 0), 0);
             
-            document.getElementById('stat-est').innerText = `₹${est.toLocaleString()}`;
-            document.getElementById('stat-act').innerText = `₹${act.toLocaleString()}`;
-            document.getElementById('stat-adv').innerText = `₹${adv.toLocaleString()}`;
-            document.getElementById('stat-rem').innerText = `₹${(act - adv).toLocaleString()}`;
+            document.getElementById('stat-est').innerText = `₹${Math.round(est).toLocaleString()}`;
+            document.getElementById('stat-act').innerText = `₹${Math.round(act).toLocaleString()}`;
+            document.getElementById('stat-adv').innerText = `₹${Math.round(adv).toLocaleString()}`;
+            document.getElementById('stat-rem').innerText = `₹${Math.round(act - adv).toLocaleString()}`;
         }
 
         function initChart() {
@@ -210,21 +200,13 @@ async function sync() {
             const ctx = document.getElementById('ritualChart').getContext('2d');
             const rituals = weddingData.filter(i => i.type === 'ritual');
             
-            const labels = rituals.map(r => r.name);
-            const estData = rituals.map(r => {
-                return weddingData.filter(i => i.meta.linkedTo === r.id).reduce((s, i) => s + Number(i.est), 0);
-            });
-            const actData = rituals.map(r => {
-                return weddingData.filter(i => i.meta.linkedTo === r.id).reduce((s, i) => s + Number(i.act), 0);
-            });
-
             chartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: rituals.map(r => r.name),
                     datasets: [
-                        { label: 'Estimated', data: estData, backgroundColor: '#c5a059' },
-                        { label: 'Actual Bill', data: actData, backgroundColor: '#630d16' }
+                        { label: 'Estimated', data: rituals.map(r => weddingData.filter(i => i.meta.linkedTo === r.id).reduce((s, i) => s + Number(i.est || 0), 0)), backgroundColor: '#c5a059' },
+                        { label: 'Actual Bill', data: rituals.map(r => weddingData.filter(i => i.meta.linkedTo === r.id).reduce((s, i) => s + Number(i.act || 0), 0)), backgroundColor: '#630d16' }
                     ]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
@@ -232,19 +214,18 @@ async function sync() {
         }
 
         function renderRituals() {
-            const container = document.getElementById('ritual-list');
             const rituals = weddingData.filter(i => i.type === 'ritual');
-            container.innerHTML = rituals.map(r => {
+            document.getElementById('ritual-list').innerHTML = rituals.map(r => {
                 const linked = weddingData.filter(i => i.meta.linkedTo === r.id);
-                const rEst = linked.reduce((s, i) => s + Number(i.est), 0);
-                const rAct = linked.reduce((s, i) => s + Number(i.act), 0);
-                const rAdv = linked.reduce((s, i) => s + Number(i.adv), 0);
+                const rEst = linked.reduce((s, i) => s + Number(i.est || 0), 0);
+                const rAct = linked.reduce((s, i) => s + Number(i.act || 0), 0);
+                const rAdv = linked.reduce((s, i) => s + Number(i.adv || 0), 0);
 
                 return `
-                <div class="card-luxury p-6 border-l-8 border-maroon">
+                <div class="card-luxury p-5 border-l-8 border-maroon">
                     <div class="flex justify-between items-start mb-4">
                         <div>
-                            <p class="text-[10px] font-bold text-gold uppercase">${r.meta.time} | ${r.meta.venue}</p>
+                            <p class="text-[10px] font-bold text-gold uppercase tracking-widest">${r.meta.time || 'Time TBD'}</p>
                             <h3 class="serif text-xl">${r.name}</h3>
                         </div>
                         <div class="flex space-x-2">
@@ -252,33 +233,32 @@ async function sync() {
                             <button onclick="deleteItem('${r.id}')" class="text-red-300"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
-                    <div class="grid grid-cols-3 gap-2 text-[10px] bg-gray-50 p-3 rounded-xl font-bold uppercase tracking-tighter">
-                        <div><p class="text-gray-400">EST</p><p>₹${rEst.toLocaleString()}</p></div>
-                        <div><p class="text-gray-400">BILL</p><p>₹${rAct.toLocaleString()}</p></div>
-                        <div><p class="text-gray-400">PAID</p><p class="text-green-600">₹${rAdv.toLocaleString()}</p></div>
+                    <div class="grid grid-cols-3 gap-2 text-[10px] bg-gray-50 p-3 rounded-xl font-bold">
+                        <div><p class="text-gray-400">EST</p><p>₹${Math.round(rEst)}</p></div>
+                        <div><p class="text-gray-400">BILL</p><p>₹${Math.round(rAct)}</p></div>
+                        <div><p class="text-gray-400">PAID</p><p class="text-green-600">₹${Math.round(rAdv)}</p></div>
                     </div>
                 </div>`;
             }).join('');
         }
 
         function renderAccounting() {
-            const tbody = document.getElementById('accounting-table');
             const items = weddingData.filter(i => i.type === 'expense');
-            tbody.innerHTML = items.map(e => {
+            document.getElementById('accounting-table').innerHTML = items.map(e => {
                 const ritual = weddingData.find(r => r.id === e.meta.linkedTo);
-                const remaining = e.act - e.adv;
+                const rem = (Number(e.act) || 0) - (Number(e.adv) || 0);
                 return `
-                <tr class="hover:bg-gray-50 transition">
+                <tr class="hover:bg-gray-50 transition border-b">
                     <td class="p-4">
                         <p class="font-bold">${e.name}</p>
-                        <p class="text-[9px] text-gold font-bold uppercase">${ritual ? ritual.name : 'Unlinked'}</p>
+                        <p class="text-[9px] text-gold font-bold uppercase">${ritual ? ritual.name : 'General'}</p>
                     </td>
-                    <td class="p-4 text-gray-400">₹${e.est}</td>
-                    <td class="p-4 font-bold">₹${e.act}</td>
-                    <td class="p-4 font-bold text-green-600">₹${e.adv}</td>
-                    <td class="p-4 font-bold text-red-600">₹${remaining}</td>
-                    <td class="p-4">
-                        <button onclick="editItem('${e.id}')" class="text-blue-500 mr-3"><i class="fa-solid fa-pencil"></i></button>
+                    <td class="p-4 text-gray-400">₹${Number(e.est || 0).toLocaleString()}</td>
+                    <td class="p-4 font-bold">₹${Number(e.act || 0).toLocaleString()}</td>
+                    <td class="p-4 text-green-600 font-bold">₹${Number(e.adv || 0).toLocaleString()}</td>
+                    <td class="p-4 text-red-600 font-bold">₹${Math.round(rem).toLocaleString()}</td>
+                    <td class="p-4 flex space-x-3">
+                        <button onclick="editItem('${e.id}')" class="text-blue-500"><i class="fa-solid fa-pencil"></i></button>
                         <button onclick="deleteItem('${e.id}')" class="text-red-300"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>`;
@@ -286,21 +266,23 @@ async function sync() {
         }
 
         function renderFleet() {
-            const list = document.getElementById('fleet-list');
             const fleet = weddingData.filter(i => i.type === 'fleet');
-            list.innerHTML = fleet.map(v => {
-                const remaining = v.act - v.adv;
+            document.getElementById('fleet-list').innerHTML = fleet.map(v => {
+                const rem = (Number(v.act) || 0) - (Number(v.adv) || 0);
                 return `
-                <div class="card-luxury p-5 border-b-4 border-gold">
-                    <div class="flex justify-between items-start mb-4">
+                <div class="card-luxury p-5">
+                    <div class="flex justify-between mb-4">
                         <h4 class="font-bold text-maroon">${v.name}</h4>
-                        <button onclick="editItem('${v.id}')" class="text-blue-400"><i class="fa-solid fa-pencil"></i></button>
+                        <div class="flex space-x-3">
+                            <button onclick="editItem('${v.id}')" class="text-blue-500 text-xs"><i class="fa-solid fa-pencil"></i></button>
+                            <button onclick="deleteItem('${v.id}')" class="text-red-300 text-xs"><i class="fa-solid fa-trash"></i></button>
+                        </div>
                     </div>
-                    <div class="space-y-1 text-xs font-bold">
-                        <div class="flex justify-between"><span>Fuel Est:</span><span>₹${v.est}</span></div>
-                        <div class="flex justify-between"><span>Final Bill:</span><span>₹${v.act}</span></div>
-                        <div class="flex justify-between text-green-600"><span>Paid:</span><span>₹${v.adv}</span></div>
-                        <div class="flex justify-between text-red-600 border-t pt-1"><span>Due:</span><span>₹${remaining}</span></div>
+                    <div class="space-y-1 text-[11px] font-bold">
+                        <div class="flex justify-between text-gray-400"><span>Fuel Est:</span><span>₹${Math.round(v.est || 0)}</span></div>
+                        <div class="flex justify-between"><span>Final Bill:</span><span>₹${Math.round(v.act || 0)}</span></div>
+                        <div class="flex justify-between text-green-600 font-bold"><span>Advance:</span><span>₹${Math.round(v.adv || 0)}</span></div>
+                        <div class="flex justify-between text-red-600 border-t pt-1 font-bold"><span>Balance:</span><span>₹${Math.round(rem)}</span></div>
                     </div>
                 </div>`;
             }).join('');
@@ -311,54 +293,58 @@ async function sync() {
             editId = existing ? existing.id : null;
             const form = document.getElementById('modal-form');
             document.getElementById('modal').classList.remove('hidden');
-            const ritualOpts = weddingData.filter(i => i.type === 'ritual').map(r => `<option value="${r.id}" ${existing?.meta.linkedTo === r.id ? 'selected' : ''}>${r.name}</option>`).join('');
+            document.getElementById('modal-title').innerText = (editId ? "Modify " : "New ") + type;
+
+            const rOpts = weddingData.filter(i => i.type === 'ritual').map(r => `<option value="${r.id}" ${existing?.meta.linkedTo === r.id ? 'selected' : ''}>${r.name}</option>`).join('');
 
             if(type === 'ritual') {
-                form.innerHTML = `<input type="text" id="f-name" value="${existing?.name || ''}" placeholder="Ritual Name" class="w-full p-4 border rounded-xl">
-                <input type="text" id="f-time" value="${existing?.meta.time || ''}" placeholder="Time" class="w-full p-4 border rounded-xl">
-                <input type="text" id="f-venue" value="${existing?.meta.venue || ''}" placeholder="Venue" class="w-full p-4 border rounded-xl">`;
-            } else if(type === 'expense') {
-                form.innerHTML = `<select id="f-link" class="w-full p-4 border rounded-xl bg-gray-50">${ritualOpts}</select>
-                <input type="text" id="f-name" value="${existing?.name || ''}" placeholder="Item Name" class="w-full p-4 border rounded-xl">
-                <input type="number" id="f-est" value="${existing?.est || ''}" placeholder="Estimated Cost" class="w-full p-4 border rounded-xl">
-                <input type="number" id="f-act" value="${existing?.act || ''}" placeholder="Actual Final Bill" class="w-full p-4 border rounded-xl">
-                <input type="number" id="f-adv" value="${existing?.adv || ''}" placeholder="Advance Paid" class="w-full p-4 border rounded-xl">`;
-            } else if(type === 'fleet') {
-                form.innerHTML = `<select id="f-link" class="w-full p-4 border rounded-xl bg-gray-50">${ritualOpts}</select>
-                <input type="text" id="f-name" value="${existing?.name || ''}" placeholder="Vehicle" class="w-full p-4 border rounded-xl">
-                <div class="grid grid-cols-2 gap-2"><input type="number" id="f-mileage" value="${existing?.meta.mileage || ''}" placeholder="Mileage"><input type="number" id="f-dist" value="${existing?.meta.dist || ''}" placeholder="Distance"></div>
-                <input type="number" id="f-act" value="${existing?.act || ''}" placeholder="Actual Fuel Bill" class="w-full p-4 border rounded-xl">
-                <input type="number" id="f-adv" value="${existing?.adv || ''}" placeholder="Fuel Advance Paid" class="w-full p-4 border rounded-xl">`;
+                form.innerHTML = `<input type="text" id="f-name" value="${existing?.name || ''}" placeholder="Ritual Name" class="w-full p-4 border rounded-xl outline-none">
+                <input type="text" id="f-time" value="${existing?.meta.time || ''}" placeholder="Time" class="w-full p-4 border rounded-xl outline-none">
+                <input type="text" id="f-venue" value="${existing?.meta.venue || ''}" placeholder="Venue" class="w-full p-4 border rounded-xl outline-none">`;
+            } else if(type === 'expense' || type === 'fleet') {
+                form.innerHTML = `<select id="f-link" class="w-full p-4 border rounded-xl font-bold text-maroon"><option value="">Select Ritual</option>${rOpts}</select>
+                <input type="text" id="f-name" value="${existing?.name || ''}" placeholder="${type === 'fleet' ? 'Vehicle Name' : 'Item Name'}" class="w-full p-4 border rounded-xl outline-none">
+                ${type === 'fleet' ? `<div class="grid grid-cols-2 gap-2"><input type="number" id="f-mile" value="${existing?.meta.mileage || ''}" placeholder="Mileage"><input type="number" id="f-dist" value="${existing?.meta.dist || ''}" placeholder="Dist"></div>` : `<input type="number" id="f-est" value="${existing?.est || 0}" placeholder="Estimated Cost" class="w-full p-4 border rounded-xl outline-none">`}
+                <input type="number" id="f-act" value="${existing?.act || 0}" placeholder="Actual Final Bill" class="w-full p-4 border rounded-xl outline-none">
+                <input type="number" id="f-adv" value="${existing?.adv || 0}" placeholder="Advance Paid" class="w-full p-4 border rounded-xl outline-none">`;
             }
         }
 
         async function saveData() {
+            const name = document.getElementById('f-name').value;
+            if(!name) return alert("Please enter a name");
+
             const item = {
                 id: editId || 'id' + Date.now(),
                 type: currentModalType,
-                name: document.getElementById('f-name').value,
+                name: name,
                 est: Number(document.getElementById('f-est')?.value) || 0,
                 act: Number(document.getElementById('f-act')?.value) || 0,
                 adv: Number(document.getElementById('f-adv')?.value) || 0,
-                completed: false,
+                completed: weddingData.find(x => x.id === editId)?.completed || false,
                 meta: {
                     linkedTo: document.getElementById('f-link')?.value || '',
                     time: document.getElementById('f-time')?.value || '',
                     venue: document.getElementById('f-venue')?.value || '',
-                    mileage: document.getElementById('f-mileage')?.value || '',
+                    mileage: document.getElementById('f-mile')?.value || '',
                     dist: document.getElementById('f-dist')?.value || ''
                 }
             };
-            if(item.type === 'fleet' && !editId) item.est = (item.meta.dist / item.meta.mileage) * 105;
+
+            if(item.type === 'fleet') {
+                item.est = (Number(item.meta.dist) / (Number(item.meta.mileage) || 1)) * 105;
+            }
 
             if(editId) weddingData = weddingData.map(i => i.id === editId ? item : i);
             else weddingData.push(item);
 
-            closeModal(); render(); await sync();
+            closeModal(); 
+            render(); 
+            await sync();
         }
 
-        function editItem(id) { const i = weddingData.find(x => x.id === id); openModal(i.type, i); }
-        async function deleteItem(id) { if(confirm("Delete?")) { weddingData = weddingData.filter(i => i.id !== id); render(); await sync(); }}
+        function editItem(id) { openModal(weddingData.find(x => x.id === id).type, weddingData.find(x => x.id === id)); }
+        async function deleteItem(id) { if(confirm("Permanently delete?")) { weddingData = weddingData.filter(i => i.id !== id); render(); await sync(); }}
         function closeModal() { document.getElementById('modal').classList.add('hidden'); }
     </script>
 </body>
